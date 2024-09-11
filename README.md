@@ -1,4 +1,4 @@
-# BigData
+# Big Data Mining
 
 ## MidTerm 52019/52002 2023-24
 
