@@ -1,0 +1,586 @@
+## MidTerm 52019/52002 2023-24
+
+# Student IDs: 
+ID1: 346453202
+ID2: 346462534
+
+
+""" Query 1: """
+
+SELECT id, title, tags, answer_count,score
+from `bigquery-public-data.stackoverflow.posts_questions`
+WHERE LOWER(tags) LIKE '%javascript%'
+order by score desc
+limit 5
+
+
+""" Query 1 Output (Json): """
+
+[{
+  "id": "5767325",
+  "title": "How can I remove a specific item from an array?",
+  "tags": "javascript|arrays",
+  "answer_count": "137",
+  "score": "10953"
+}, {
+  "id": "178325",
+  "title": "How do I check if an element is hidden in jQuery?",
+  "tags": "javascript|jquery|dom|visibility",
+  "answer_count": "65",
+  "score": "8447"
+}, {
+  "id": "1335851",
+  "title": "What does \"use strict\" do in JavaScript, and what is the reasoning behind it?",
+  "tags": "javascript|syntax|jslint|use-strict",
+  "answer_count": "31",
+  "score": "8264"
+}, {
+  "id": "503093",
+  "title": "How do I redirect to another webpage?",
+  "tags": "javascript|jquery|redirect",
+  "answer_count": "58",
+  "score": "7707"
+}, {
+  "id": "111102",
+  "title": "How do JavaScript closures work?",
+  "tags": "javascript|function|variables|scope|closures",
+  "answer_count": "86",
+  "score": "7623"
+}]
+
+
+""" Query 2: """
+
+WITH
+  JavaScript AS (
+    SELECT
+      'javascript' AS language,
+      COUNT(*) AS total_posts,
+      COUNT(NULLIF(answer_count, 0)) AS one_answer,   
+      AVG(score) AS mean_score,
+      AVG(view_count) AS mean_views,
+      AVG(answer_count) AS mean_answer
+    FROM
+      `bigquery-public-data.stackoverflow.posts_questions`
+    WHERE
+      LOWER(tags) LIKE '%javascript%'
+  ),
+
+ Java AS (
+    SELECT
+      'java' AS language,
+      COUNT(*) AS total_posts,
+      COUNT(NULLIF(answer_count, 0)) AS one_answer,
+      AVG(score) AS mean_score,
+      AVG(view_count) AS mean_views,
+      AVG(answer_count) AS mean_answer
+    FROM
+      `bigquery-public-data.stackoverflow.posts_questions`
+    WHERE
+      LOWER(tags) LIKE '%java%'
+      AND LOWER(tags) NOT LIKE '%javascript%'
+  )
+
+SELECT * FROM JavaScript
+UNION ALL
+SELECT * FROM Java;
+
+
+
+""" Query 2 Output (Json): """
+
+[{
+  "language": "javascript",
+  "total_posts": "2434159",
+  "one_answer": "2094314",
+  "mean_score": "2.0792754294193596",
+  "mean_views": "2859.457102843322",
+  "mean_answer": "1.5549756609983154"
+}, {
+  "language": "java",
+  "total_posts": "1900935",
+  "one_answer": "1631221",
+  "mean_score": "2.2477996354425587",
+  "mean_views": "3402.1347736771645",
+  "mean_answer": "1.6071133415924264"
+}]
+
+
+""" Query 3: """
+
+WITH JavaScript AS (
+  SELECT
+    FORMAT_DATE('%A', DATE(DATETIME(creation_date))) AS day_of_week,
+    COUNT(NULLIF(answer_count, 0)) AS one_answer,
+    COUNT(*) AS total_posts,
+    AVG(score) AS mean_score,
+    AVG(view_count) AS mean_views,
+    AVG(answer_count) AS mean_answer
+  FROM
+    `bigquery-public-data.stackoverflow.posts_questions`
+  WHERE
+    LOWER(tags) LIKE '%javascript%'
+  GROUP BY
+    day_of_week
+)
+
+SELECT
+  day_of_week,
+  total_posts,
+  one_answer,
+  mean_score,
+  mean_views,
+  mean_answer
+FROM
+  JavaScript
+ORDER BY
+  day_of_week;
+
+
+
+""" Query 3 Output (Json): """
+
+[{
+  "day_of_week": "Friday",
+  "total_posts": "371657",
+  "one_answer": "320208",
+  "mean_score": "2.0808702647871562",
+  "mean_views": "2874.2597502535941",
+  "mean_answer": "1.5763943636202193"
+}, {
+  "day_of_week": "Monday",
+  "total_posts": "376293",
+  "one_answer": "322260",
+  "mean_score": "2.0090036221773993",
+  "mean_views": "2855.3431979866746",
+  "mean_answer": "1.5442965986611494"
+}, {
+  "day_of_week": "Saturday",
+  "total_posts": "220939",
+  "one_answer": "192004",
+  "mean_score": "2.0430028197828358",
+  "mean_views": "2731.4435115574893",
+  "mean_answer": "1.5235924848034974"
+}, {
+  "day_of_week": "Sunday",
+  "total_posts": "221613",
+  "one_answer": "191690",
+  "mean_score": "1.9640860418838242",
+  "mean_views": "2642.3997148181752",
+  "mean_answer": "1.4982695058502888"
+}, {
+  "day_of_week": "Thursday",
+  "total_posts": "414798",
+  "one_answer": "356302",
+  "mean_score": "2.1526260975221678",
+  "mean_views": "2939.2093910771032",
+  "mean_answer": "1.569431385879392"
+}, {
+  "day_of_week": "Tuesday",
+  "total_posts": "410725",
+  "one_answer": "352668",
+  "mean_score": "2.119812526629739",
+  "mean_views": "2924.0440026781916",
+  "mean_answer": "1.5653466431310492"
+}, {
+  "day_of_week": "Wednesday",
+  "total_posts": "418134",
+  "one_answer": "359182",
+  "mean_score": "2.1087306939880537",
+  "mean_views": "2890.126495334031",
+  "mean_answer": "1.5676577365150886"
+}]
+
+""" Query 3  Answer:  """
+
+The minimal number of posts is on Saturday: 371657. 
+The maximum number of posts is on Wednesday: 418134. 
+We can pay attention that the average of answers and the score average is not really depending on the day, they are pretty stable, around 2 for the score average and around 1.5 for the answer average. 
+On the other hand, the total number of posts is higher in the middle of the week (Tuesday, Wednesday and Thursday ) than on the week end (Saturday, Sunday). It is exactly the same thing for the average views. Looks like there is less people that are working on the week end. 
+
+
+""" Query 4: """
+
+WITH JavaScriptPythonQuestions AS (
+  SELECT
+    q.id AS question_id,
+    q.title,
+    q.tags,
+    a.id AS answer_id,
+    a.body AS answer_body,
+    REPLACE(q.body, '\n', '') AS question_body,
+  FROM
+    `bigquery-public-data.stackoverflow.posts_questions` AS q
+  JOIN
+    `bigquery-public-data.stackoverflow.posts_answers` AS a
+  ON
+    q.id = a.parent_id
+  WHERE
+    LOWER(q.title) LIKE '%javascript%'
+    AND LOWER(q.title) LIKE '%python%'
+)
+
+SELECT
+  question_id,
+  title,
+  tags,
+  answer_id,
+  question_body,
+  answer_body
+FROM
+  JavaScriptPythonQuestions
+ORDER BY
+  question_id
+
+LIMIT 5;
+
+
+""" Query 4 Output (Json): """
+[{
+  "question_id": "39960",
+  "title": "Javascript equivalent of Python\u0027s locals()?",
+  "tags": "javascript|python",
+  "answer_id": "40173",
+  "question_body": "\u003cp\u003eIn Python one can get a dictionary of all local and global variables in the current scope with the built-in functions \u003ccode\u003elocals()\u003c/code\u003e and \u003ccode\u003eglobals()\u003c/code\u003e.  Is there some equivalent way of doing this in Javascript?  For instance, I would like to do something like the following:\u003c/p\u003e\u003cpre\u003e\u003ccode\u003evar foo \u003d function(){ alert(\u0027foo\u0027); };var bar \u003d function(){ alert(\u0027bar\u0027); };var s \u003d \u0027foo\u0027;locals()[s](); // alerts \u0027foo\u0027\u003c/code\u003e\u003c/pre\u003e\u003cp\u003eIs this at all possible, or should I just be using a local object for the lookup?\u003c/p\u003e",
+  "answer_body": "\u003cul\u003e\n\u003cli\u003e\u003cp\u003elocals() - No. \u003c/p\u003e\u003c/li\u003e\n\u003cli\u003e\u003cp\u003eglobals() - Yes.\u003c/p\u003e\u003c/li\u003e\n\u003c/ul\u003e\n\n\u003cp\u003e\u003ccode\u003ewindow\u003c/code\u003e is a reference to the global scope, like \u003ccode\u003eglobals()\u003c/code\u003e in python.\u003c/p\u003e\n\n\u003cpre\u003e\u003ccode\u003eglobals()[\"foo\"]\n\u003c/code\u003e\u003c/pre\u003e\n\n\u003cp\u003eis the same as:\u003c/p\u003e\n\n\u003cpre\u003e\u003ccode\u003ewindow[\"foo\"]\n\u003c/code\u003e\u003c/pre\u003e"
+}, {
+  "question_id": "39960",
+  "title": "Javascript equivalent of Python\u0027s locals()?",
+  "tags": "javascript|python",
+  "answer_id": "39982",
+  "question_body": "\u003cp\u003eIn Python one can get a dictionary of all local and global variables in the current scope with the built-in functions \u003ccode\u003elocals()\u003c/code\u003e and \u003ccode\u003eglobals()\u003c/code\u003e.  Is there some equivalent way of doing this in Javascript?  For instance, I would like to do something like the following:\u003c/p\u003e\u003cpre\u003e\u003ccode\u003evar foo \u003d function(){ alert(\u0027foo\u0027); };var bar \u003d function(){ alert(\u0027bar\u0027); };var s \u003d \u0027foo\u0027;locals()[s](); // alerts \u0027foo\u0027\u003c/code\u003e\u003c/pre\u003e\u003cp\u003eIs this at all possible, or should I just be using a local object for the lookup?\u003c/p\u003e",
+  "answer_body": "\u003cp\u003eWell, I don\u0027t think that there is something like that in js. You can always use eval instead of locals(). Like this: \u003c/p\u003e\n\n\u003cpre\u003e\u003ccode\u003eeval(s+\"()\");\n\u003c/code\u003e\u003c/pre\u003e\n\n\u003cp\u003eYou just have to know that actually function \u003cem\u003efoo\u003c/em\u003e exists.\u003c/p\u003e\n\n\u003cp\u003e\u003cstrong\u003eEdit:\u003c/strong\u003e\u003c/p\u003e\n\n\u003cp\u003eDon\u0027t use eval:) Use:\u003c/p\u003e\n\n\u003cpre\u003e\u003ccode\u003evar functionName\u003d\"myFunctionName\";\nwindow[functionName]();\n\u003c/code\u003e\u003c/pre\u003e"
+}, {
+  "question_id": "39960",
+  "title": "Javascript equivalent of Python\u0027s locals()?",
+  "tags": "javascript|python",
+  "answer_id": "40012",
+  "question_body": "\u003cp\u003eIn Python one can get a dictionary of all local and global variables in the current scope with the built-in functions \u003ccode\u003elocals()\u003c/code\u003e and \u003ccode\u003eglobals()\u003c/code\u003e.  Is there some equivalent way of doing this in Javascript?  For instance, I would like to do something like the following:\u003c/p\u003e\u003cpre\u003e\u003ccode\u003evar foo \u003d function(){ alert(\u0027foo\u0027); };var bar \u003d function(){ alert(\u0027bar\u0027); };var s \u003d \u0027foo\u0027;locals()[s](); // alerts \u0027foo\u0027\u003c/code\u003e\u003c/pre\u003e\u003cp\u003eIs this at all possible, or should I just be using a local object for the lookup?\u003c/p\u003e",
+  "answer_body": "\u003cp\u003eI seem to remember Brendan Eich commented on this in a recent podcast; if i recall correctly, it\u0027s not being considered, as it adds unreasonable restrictions to optimization. He compared it to the \u003ccode\u003earguments\u003c/code\u003e local in that, while useful for varargs, its very existence removes the ability to guess at what a function will touch just by looking at its definition. \u003c/p\u003e\n\n\u003cp\u003eBTW: i believe JS \u003cem\u003edid\u003c/em\u003e have support for accessing locals through the arguments local at one time - \u003ca href\u003d\"http://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Functions/arguments\" rel\u003d\"nofollow noreferrer\"\u003ea quick search\u003c/a\u003e shows this has been deprecated though.\u003c/p\u003e"
+}, {
+  "question_id": "39960",
+  "title": "Javascript equivalent of Python\u0027s locals()?",
+  "tags": "javascript|python",
+  "answer_id": "40035",
+  "question_body": "\u003cp\u003eIn Python one can get a dictionary of all local and global variables in the current scope with the built-in functions \u003ccode\u003elocals()\u003c/code\u003e and \u003ccode\u003eglobals()\u003c/code\u003e.  Is there some equivalent way of doing this in Javascript?  For instance, I would like to do something like the following:\u003c/p\u003e\u003cpre\u003e\u003ccode\u003evar foo \u003d function(){ alert(\u0027foo\u0027); };var bar \u003d function(){ alert(\u0027bar\u0027); };var s \u003d \u0027foo\u0027;locals()[s](); // alerts \u0027foo\u0027\u003c/code\u003e\u003c/pre\u003e\u003cp\u003eIs this at all possible, or should I just be using a local object for the lookup?\u003c/p\u003e",
+  "answer_body": "\u003cp\u003e@e-bartek, I think that window[functionName] won\u0027t work if you in some closure, and the function name is local to that closure.  For example:\u003c/p\u003e\n\n\u003cpre\u003e\u003ccode\u003efunction foo() {\n    var bar \u003d function () {\n        alert(\u0027hello world\u0027);\n    };\n    var s \u003d \u0027bar\u0027;\n    window[s](); // this won\u0027t work\n}\n\u003c/code\u003e\u003c/pre\u003e\n\n\u003cp\u003eIn this case, s is \u0027bar\u0027, but the function \u0027bar\u0027 only exists inside the scope of the function \u0027foo\u0027.  It is not defined in the window scope.\u003c/p\u003e\n\n\u003cp\u003eOf course, this doesn\u0027t really answer the original question, I just wanted to chime in on this response.  I don\u0027t believe there is a way to do what the original question asked.\u003c/p\u003e"
+}, {
+  "question_id": "39960",
+  "title": "Javascript equivalent of Python\u0027s locals()?",
+  "tags": "javascript|python",
+  "answer_id": "40067",
+  "question_body": "\u003cp\u003eIn Python one can get a dictionary of all local and global variables in the current scope with the built-in functions \u003ccode\u003elocals()\u003c/code\u003e and \u003ccode\u003eglobals()\u003c/code\u003e.  Is there some equivalent way of doing this in Javascript?  For instance, I would like to do something like the following:\u003c/p\u003e\u003cpre\u003e\u003ccode\u003evar foo \u003d function(){ alert(\u0027foo\u0027); };var bar \u003d function(){ alert(\u0027bar\u0027); };var s \u003d \u0027foo\u0027;locals()[s](); // alerts \u0027foo\u0027\u003c/code\u003e\u003c/pre\u003e\u003cp\u003eIs this at all possible, or should I just be using a local object for the lookup?\u003c/p\u003e",
+  "answer_body": "\u003cp\u003e@pkaeding\u003c/p\u003e\n\n\u003cp\u003eYes, you\u0027re right. \u003cem\u003ewindow[functionName]()\u003c/em\u003e doesn\u0027t work in this case, but \u003cem\u003eeval\u003c/em\u003e does. If I needed something like this, I\u0027d create my own object to keep those functions together.\u003c/p\u003e\n\n\u003cpre\u003e\u003ccode\u003evar func \u003d {};\nfunc.bar \u003d ...;\nvar s \u003d \"bar\";\nfunc[s]();\n\u003c/code\u003e\u003c/pre\u003e"
+}]
+
+""" Query 5: """
+
+WITH JavaScriptExperts AS (
+  SELECT
+    id AS user_id,
+    display_name,
+    reputation,
+    CASE
+      WHEN LOWER(location) LIKE '%seattle%' THEN 'Seattle'
+      WHEN LOWER(location) LIKE '%san francisco%' THEN 'San Francisco'
+      WHEN LOWER(location) LIKE '%new york%' THEN 'New York'
+      WHEN LOWER(location) LIKE '%nyc%' THEN 'New York'
+      WHEN LOWER(location) LIKE '%houston%' THEN 'Houston'
+      WHEN LOWER(location) LIKE '%rochester%' THEN 'Rochester'
+      WHEN LOWER(location) LIKE '%austin%' THEN 'Austin'
+      WHEN LOWER(location) LIKE '%new jersey%' THEN 'New Jersey'
+      WHEN LOWER(location) LIKE '%los angeles%' THEN 'Los Angeles'
+      WHEN LOWER(location) LIKE '%boston%' THEN 'Boston'
+      WHEN LOWER(location) LIKE '%washington%' THEN 'Washington'
+      WHEN LOWER(location) LIKE '%chicago%' THEN 'Chicago'
+
+      ELSE LOWER(location)
+    END AS standardized_location,
+    about_me,
+    website_url,
+    ROW_NUMBER() OVER (PARTITION BY LOWER(location) ORDER BY reputation DESC) AS row_num
+  FROM
+    `bigquery-public-data.stackoverflow.users`
+  WHERE
+    LOWER(about_me) LIKE '%javascript%'
+    AND (
+      LOWER(location) LIKE '%usa%'
+      OR LOWER(location) LIKE '%united states%'
+      OR LOWER(location) LIKE '%united states of america%'
+      OR LOWER(location) LIKE '%u.s.a%'
+    )
+    AND LOWER(about_me) LIKE '%javascript%'
+    AND LENGTH(location) - LENGTH(REPLACE(location, ',', '')) = 2 
+
+)
+
+SELECT
+  user_id,
+  display_name,
+  reputation,
+  standardized_location AS location,
+  about_me,
+  website_url
+FROM
+  JavaScriptExperts
+WHERE
+  row_num = 1
+ORDER BY
+  reputation DESC
+LIMIT 5;
+
+
+
+
+""" Query 5 Output (Json): """
+[{
+  "user_id": "748858",
+  "display_name": "mgilson",
+  "reputation": "288106",
+  "location": "pittsburgh, pa, united states",
+  "about_me": "\u003cp\u003eI used to be a fortran and sometimes C programmer, but these days I write mostly python and javascript.  I am interested in computational physics and like to write code.  \u003c/p\u003e\n\n\u003cp\u003eI also used to be an avid gnuplot user and maybe someday I will be again...\u003c/p\u003e\n\n\u003cp\u003eI am a currently a software engineer at \u003ca href\u003d\"https://argo.ai\" rel\u003d\"nofollow noreferrer\"\u003eArgo AI\u003c/a\u003e working to make the world\u0027s cars drive themselves.\u003c/p\u003e\n\n\u003cp\u003e~Matt\u003c/p\u003e",
+  "website_url": "http://None"
+}, {
+  "user_id": "634824",
+  "display_name": "Matt Johnson-Pint",
+  "reputation": "219306",
+  "location": "woodinville, wa, usa",
+  "about_me": "\u003cp\u003ené Matt Johnson.  He/him/his (\u003cem\u003enot dude/bro, please\u003c/em\u003e).\u003c/p\u003e\n\u003cp\u003eHi!  I am primarily a .NET C# developer, and I also do a lot of work in JavaScript.  I specialize in date and time issues, especially the tricky ones involving time zones.\u003c/p\u003e\n\u003cp\u003eI currently work for \u003ca href\u003d\"https://sentry.io\" rel\u003d\"nofollow noreferrer\"\u003eSentry\u003c/a\u003e, primarily on the .NET SDK. I used to work for Microsoft, and other companies prior to that.  All questions, answers, comments and code are from me personally, and in no way represented the opinions of my past or present employers.\u003c/p\u003e",
+  "website_url": "http://codeofmatt.com/"
+}, {
+  "user_id": "206403",
+  "display_name": "gen_Eric",
+  "reputation": "217247",
+  "location": "Rochester",
+  "about_me": "\u003cp\u003eBefore I introduce myself, I just want to politely ask people to \u003cstrong\u003enot\u003c/strong\u003e email me with programming questions.  I have my own work to attend to.  If you want my help, ask a question here, and I might see it :-)\u003c/p\u003e\n\u003chr /\u003e\n\u003cp\u003eAnyway. I\u0027m just your typical web developer.  PHP, JavaScript, jQuery, HTML, CSS, the works.\u003c/p\u003e\n\u003cp\u003eI usually hang out at \u003ccode\u003e/home/nticompass\u003c/code\u003e.  Sometimes I\u0027ll \u003ccode\u003ecd\u003c/code\u003e to other folders, but I usually just chill at home.  I like to hang with my friends at \u003ccode\u003e/usr/share\u003c/code\u003e, or sometimes even \u003ccode\u003e/opt\u003c/code\u003e, when I\u0027m feeling adventurous.\u003c/p\u003e\n\u003cp\u003eMy shell is zsh and my editor of choice is Geany, when I want a GUI, or Vim, when I don\u0027t.  I use Google Chrome, and sometimes Firefox.\u003c/p\u003e\n\u003cp\u003eI use either Arch Linux or Gentoo, though I have been known to use Mac OS X or even Windows at times.\u003c/p\u003e\n\u003cp\u003eI discovered StackOverflow after realizing that Yahoo Answers wasn\u0027t taking it seriously and Experts Exchange made you pay for answers.  I love to answer questions and help people out and I am so grateful to those who have answered my questions.  I know that programming is much better when you have people to reach out to and you\u0027re not in your office pulling your hair out over a missing semicolon!  I am #SOreadytohelp\u003c/p\u003e\n\u003cimg src\u003d\"https://i.stack.imgur.com/KCyhw.png\" width\u003d\"300\" height\u003d\"227\" /\u003e",
+  "website_url": "https://NTICompass.computer"
+}, {
+  "user_id": "390278",
+  "display_name": "Jeff Mercado",
+  "reputation": "123647",
+  "location": "irvine, ca, usa",
+  "about_me": "\u003cp\u003e\u003ca href\u003d\"https://stackexchange.com/users/166270\"\u003e\n\u003cimg src\u003d\"https://stackexchange.com/users/flair/166270.png\" width\u003d\"208\" height\u003d\"58\" alt\u003d\"profile for Jeff Mercado on Stack Exchange, a network of free, community-driven Q\u0026amp;A sites\" title\u003d\"profile for Jeff Mercado on Stack Exchange, a network of free, community-driven Q\u0026amp;A sites\"\u003e\n\u003c/a\u003e\u003c/p\u003e\n\n\u003cp\u003eComputers have always been a big part of my life.  I\u0027ve always had an interest in programming paradigms and languages as well as low-level systems design.  I enjoy reinventing the wheel, chrome plating it and adding spinners.  I also love to know how everything works from the code that we write, the systems it runs on, and the hardware this is run on.  I want to know it all.  I have no problem building out tools to help make problems I come across a lot easier to deal with.  C# is my language of choice and aim to be sufficiently familiar with all related technologies.  And with the growth that has been sparked ever since the development of the newer Roslyn compilers, my love for it has no bounds.\u003c/p\u003e\n\n\u003cp\u003eLINQ is AWESOME. (period)\u003c/p\u003e\n\n\u003chr\u003e\n\n\u003cp\u003e\u003cstrong\u003ePreferred language(s):\u003c/strong\u003e C, C#\u003cbr\u003e\n\u003cstrong\u003eLoves:\u003c/strong\u003e C, C++, C#, Python, Javascript, Typescript\u003cbr\u003e\n\u003cstrong\u003eWell versed in:\u003c/strong\u003e C, C++, C#, Python, Java, Javascript, Typescript\u003cbr\u003e\n\u003cstrong\u003eFamiliar with:\u003c/strong\u003e VB, F#\u003c/p\u003e",
+  "website_url": null
+}, {
+  "user_id": "8690857",
+  "display_name": "Drew Reese",
+  "reputation": "121119",
+  "location": "Seattle",
+  "about_me": "\u003cp\u003eI love the challenge of helping other developers resolve and overcome their hurdles, and expanding my own knowledge base at the same time.\u003c/p\u003e\n\u003cp\u003e\u0026quot;In lifting others, we rise\u0026quot;\u003c/p\u003e\n\u003cp\u003e\u003ca href\u003d\"https://stackexchange.com/users/11875768\"\u003e\u003cimg src\u003d\"https://stackexchange.com/users/flair/11875768.png?theme\u003dclean\" width\u003d\"208\" height\u003d\"58\" alt\u003d\"profile for Drew Reese on Stack Exchange, a network of free, community-driven Q\u0026amp;A sites\" title\u003d\"profile for Drew Reese on Stack Exchange, a network of free, community-driven Q\u0026amp;A sites\"\u003e\u003c/a\u003e\u003c/p\u003e\n\u003cp\u003e\u003ca href\u003d\"https://stackoverflow.blog/2022/05/03/what-counts-as-art-anyway-ep-438/\"\u003eWhat Counts as Art, Anyway ep438\u003c/a\u003e\u003c/p\u003e\n\u003cp\u003e\u003ca href\u003d\"/help/badges/5357/reactjs\"\u003e\u003cimg src\u003d\"https://i.stack.imgur.com/xqYa6.png\" alt\u003d\"react badge\" /\u003e\u003c/a\u003e #19 \u003cbr/\u003e\n\u003ca href\u003d\"/help/badges/9195/react-hooks\"\u003e\u003cimg src\u003d\"https://i.stack.imgur.com/sSz3f.png\" alt\u003d\"react-hooks badge\" /\u003e\u003c/a\u003e #2 \u003cbr/\u003e\n\u003ca href\u003d\"/help/badges/78/javascript\"\u003e\u003cimg src\u003d\"https://i.stack.imgur.com/HINNP.png\" alt\u003d\"javascript badge\" /\u003e\u003c/a\u003e #582 \u003cbr/\u003e\n\u003ca href\u003d\"/help/badges/10969/react-router-dom\"\u003e\u003cimg src\u003d\"https://i.stack.imgur.com/fcLwK.png\" alt\u003d\"react-router-dom badge\" /\u003e\u003c/a\u003e #1 \u003cbr/\u003e\n\u003ca href\u003d\"/help/badges/8948/react-router\"\u003e\u003cimg src\u003d\"https://i.stack.imgur.com/U8e7R.png\" alt\u003d\"react-router badge\" /\u003e\u003c/a\u003e #2 \u003cbr/\u003e\n\u003ca href\u003d\"/help/badges/146/legendary\"\u003e\u003cimg src\u003d\"https://i.stack.imgur.com/wt2eO.png\" alt\u003d\"legendary badge\" /\u003e\u003c/a\u003e # 310 \u003cbr/\u003e\u003c/p\u003e",
+  "website_url": "http://awreese.github.io/"
+}]
+
+
+
+""" Query 6_Questions: """
+
+WITH UserQuestionGroups AS (
+  SELECT
+    u.id AS user_id,
+    COUNT(*) AS question_count,
+    AVG(u.reputation) AS avg_reputation
+  FROM
+    `bigquery-public-data.stackoverflow.posts_questions` q
+  JOIN
+    `bigquery-public-data.stackoverflow.users` u
+  ON
+    q.owner_user_id = u.id
+  GROUP BY
+    user_id
+)
+
+SELECT
+  FLOOR(question_count / 1000) * 1000 AS question_group,
+  COUNT(*) AS user_count,
+  AVG(avg_reputation) AS avg_reputation
+FROM
+  UserQuestionGroups
+GROUP BY
+  question_group
+ORDER BY
+  question_group;
+
+
+""" Query 6_Answers:  """
+
+WITH UserAnswerGroups AS (
+  SELECT
+    u.id AS user_id,
+    COUNT(*) AS answer_count,
+    AVG(u.reputation) AS avg_reputation
+  FROM
+    `bigquery-public-data.stackoverflow.posts_answers` a
+  JOIN
+    `bigquery-public-data.stackoverflow.users` u
+  ON
+    a.owner_user_id = u.id
+  GROUP BY
+    user_id
+)
+
+SELECT
+  FLOOR(answer_count / 1000) * 1000 AS answer_group,
+  COUNT(*) AS user_count,
+  AVG(avg_reputation) AS avg_reputation
+FROM
+  UserAnswerGroups
+GROUP BY
+  answer_group
+ORDER BY
+  answer_group;
+
+
+""" Query 6_Questions Output (Json): """
+
+
+[{
+  "question_group": "0.0",
+  "user_count": "4657835",
+  "avg_reputation": "349.2863128470641"
+}, {
+  "question_group": "1000.0",
+  "user_count": "76",
+  "avg_reputation": "60588.092105263153"
+}, {
+  "question_group": "2000.0",
+  "user_count": "4",
+  "avg_reputation": "109321.5"
+}]
+
+""" Query 6_Answers Output (Json): """
+
+[{
+  "answer_group": "0.0",
+  "user_count": "2885140",
+  "avg_reputation": "498.07403141614975"
+}, {
+  "answer_group": "1000.0",
+  "user_count": "1690",
+  "avg_reputation": "64227.2727810651"
+}, {
+  "answer_group": "2000.0",
+  "user_count": "469",
+  "avg_reputation": "113348.96588486141"
+}, {
+  "answer_group": "3000.0",
+  "user_count": "212",
+  "avg_reputation": "170224.52358490563"
+}, {
+  "answer_group": "4000.0",
+  "user_count": "102",
+  "avg_reputation": "199336.5"
+}, {
+  "answer_group": "5000.0",
+  "user_count": "59",
+  "avg_reputation": "232587.25423728814"
+}, {
+  "answer_group": "6000.0",
+  "user_count": "48",
+  "avg_reputation": "284761.27083333343"
+}, {
+  "answer_group": "7000.0",
+  "user_count": "21",
+  "avg_reputation": "315574.66666666663"
+}, {
+  "answer_group": "8000.0",
+  "user_count": "14",
+  "avg_reputation": "318147.64285714284"
+}, {
+  "answer_group": "9000.0",
+  "user_count": "8",
+  "avg_reputation": "381030.625"
+}, {
+  "answer_group": "10000.0",
+  "user_count": "8",
+  "avg_reputation": "381304.875"
+}, {
+  "answer_group": "11000.0",
+  "user_count": "8",
+  "avg_reputation": "415732.125"
+}, {
+  "answer_group": "12000.0",
+  "user_count": "7",
+  "avg_reputation": "538500.85714285716"
+}, {
+  "answer_group": "13000.0",
+  "user_count": "4",
+  "avg_reputation": "458101.5"
+}, {
+  "answer_group": "14000.0",
+  "user_count": "1",
+  "avg_reputation": "359371.0"
+}, {
+  "answer_group": "15000.0",
+  "user_count": "5",
+  "avg_reputation": "653522.8"
+}, {
+  "answer_group": "16000.0",
+  "user_count": "3",
+  "avg_reputation": "751870.33333333337"
+}, {
+  "answer_group": "17000.0",
+  "user_count": "1",
+  "avg_reputation": "1053483.0"
+}, {
+  "answer_group": "19000.0",
+  "user_count": "2",
+  "avg_reputation": "781215.0"
+}, {
+  "answer_group": "20000.0",
+  "user_count": "1",
+  "avg_reputation": "469013.0"
+}, {
+  "answer_group": "21000.0",
+  "user_count": "1",
+  "avg_reputation": "1003275.0"
+}, {
+  "answer_group": "22000.0",
+  "user_count": "2",
+  "avg_reputation": "972639.5"
+}, {
+  "answer_group": "23000.0",
+  "user_count": "1",
+  "avg_reputation": "874809.0"
+}, {
+  "answer_group": "25000.0",
+  "user_count": "1",
+  "avg_reputation": "730750.0"
+}, {
+  "answer_group": "28000.0",
+  "user_count": "2",
+  "avg_reputation": "956300.5"
+}, {
+  "answer_group": "30000.0",
+  "user_count": "1",
+  "avg_reputation": "694414.0"
+}, {
+  "answer_group": "35000.0",
+  "user_count": "1",
+  "avg_reputation": "1357603.0"
+}, {
+  "answer_group": "36000.0",
+  "user_count": "1",
+  "avg_reputation": "817703.0"
+}, {
+  "answer_group": "85000.0",
+  "user_count": "1",
+  "avg_reputation": "1211186.0"
+}]
+
+
+""" Query 6  Answer:  """
+1. Questions:
+We can observe that almost all users asked between 0 and 999 questions and the average reputation is about 949 .
+The next group of users represent a small proportion of users and their average is almost 200 times higher than that of the previous group ie 60588.
+
+Finally, the last group consists of only 4 people and their average is 109321 .
+We can therefore conclude that the more active the user and the higher his reputation.
+
+2. Answers: 
+We can see that users with between 0 and 999 responses represent the majority of users. Their reputation is quite low, about 500 .
+The next group of users consists of 1690 users and their reputation has been about multiplied by a factor greater than 100 .
+The higher the number of replies, the smaller the number of usersand (in the next increments). The higher the response increment is 85,000 responses, only 1 user has reputation 1211186.
+
+We can therefore conclude that the higher the slices and the more the reputation grows but we can observe that from the 13th slice the progression is regressive because there are very few users in this group.
+
+

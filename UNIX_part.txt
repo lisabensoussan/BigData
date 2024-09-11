@@ -1,0 +1,209 @@
+## MidTerm 52019/52002 2023-24
+
+# Student IDs: 
+ID1: 346453202
+ID2: 346462534
+
+
+## You must show a "Proof of Work" for each question, even if there is no explicit output. 
+## For example, a proof of work can be a printout/output that demonstrates that your command achieved the requirements. 
+
+Remark: Before doing all the questions, we address the commas problem in the file. The file 
+can be opened nicely in excel, but only after separating it using the command: 
+
+> awk -F'"' -v OFS='"' '{ for (i=2; i<=NF; i+=2) gsub(",", "COMMAINSIDEQUOTES", $i) } 1' stackoverflow_javascript_python_qa.csv | sed "s/\,/\\t/g" | sed "s/COMMAINSIDEQUOTES/\,/g" > stackoverflow_javascript_python_qa_clean.csv
+
+
+""" Question 1 Shell Commands ($): """
+
+lisabensoussan@MacBook-Air-de-Lisa ~ % head -n 10 /Users/lisabensoussan/Desktop/MidTerm_2023_24/stackoverflow_javascript_python_qa_clean.csv
+
+
+
+
+
+lisabensoussan@MacBook-Air-de-Lisa ~ % wc /Users/lisabensoussan/Desktop/MidTerm_2023_24/stackoverflow_javascript_python_qa_clean.csv        
+
+
+
+""" Question 1 Shell Output ($): """
+
+question_id	title	tags	answer_id	question_body	answer_body	creation_date_only
+39960	Javascript equivalent of Python's locals()?	javascript|python	39982	"<p>In Python one can get a dictionary of all local and global variables in the current scope with the built-in functions <code>locals()</code> and <code>globals()</code>.  Is there some equivalent way of doing this in Javascript?  For instance, I would like to do something like the following:</p><pre><code>var foo = function(){ alert('foo'); };var bar = function(){ alert('bar'); };var s = 'foo';locals()[s](); // alerts 'foo'</code></pre><p>Is this at all possible, or should I just be using a local object for the lookup?</p>"	"<p>Well, I don't think that there is something like that in js. You can always use eval instead of locals(). Like this: </p>
+
+<pre><code>eval(s+""()"");
+</code></pre>
+
+<p>You just have to know that actually function <em>foo</em> exists.</p>
+
+<p><strong>Edit:</strong></p>
+
+
+
+
+
+
+   75439 1062223 9991459 /Users/lisabensoussan/Desktop/MidTerm_2023_24/stackoverflow_javascript_python_qa_clean.csv
+
+
+
+""" Question 2 Shell Commands ($): """
+
+lisabensoussan@MacBook-Air-de-Lisa ~ % grep -i -E "pandas|numpy" /Users/lisabensoussan/Desktop/MidTerm_2023_24/stackoverflow_javascript_python_qa_clean.csv | sort -u | wc -l
+
+
+
+
+
+lisabensoussan@MacBook-Air-de-Lisa ~ % awk -F'\t' 'NR > 1 { print $5 }' /Users/lisabensoussan/Desktop/MidTerm_2023_24/stackoverflow_javascript_python_qa_clean.csv | grep -i -E "pandas|numpy" | sort -u | wc -l
+
+
+
+
+
+""" Question 2 Shell Output ($): """
+
+     138
+
+
+
+      55
+
+
+
+""" Question 3 Shell Commands ($): """
+
+lisabensoussan@MacBook-Air-de-Lisa ~ % awk -F'\t' 'NR > 1 { year=substr($7, 1, 4); if (year ~ /^[0-9]{4}$/ && year >= 2008 && year <= 2023) print > ("/Users/lisabensoussan/Desktop/MidTerm_2023_24/questions_" year ".csv") }' /Users/lisabensoussan/Desktop/MidTerm_2023_24/stackoverflow_javascript_python_qa_clean.csv
+
+
+
+
+lisabensoussan@MacBook-Air-de-Lisa ~ % ls -1 questions_*.csv | wc -l
+
+
+
+lisabensoussan@MacBook-Air-de-Lisa ~ % for file in questions_*.csv; do
+  echo "File: $file"
+  head -n 1 "$file"
+done
+
+
+
+""" Question 3 Shell Output ($): """
+
+     14
+
+
+File: questions_2008.csv
+112112	Javascript interpreter to replace Python	javascript|shell|scripting	112129	"<p>In terms of quick dynamically typed languages, I'm really starting to like Javascript, as I use it a lot for web projects, especially because it uses the same syntax as Actionscript (flash).</p><p>It would be an ideal language for shell scripting, making it easier to move code from the front and back end of a site, and less of the strange syntax of python.</p><p>Is there a good, javascript interpreter that is easy to install (I know there's one based on java, but that would mean installing all the java stuff to use), </p>"	"<p>You'll need some server-side JavaScript interpreter. Check out the following <a href=""http://peter.michaux.ca/article/3001"" rel=""nofollow noreferrer"">blog post</a>. Something such as <a href=""http://www.mozilla.org/rhino/"" rel=""nofollow noreferrer"">Rhino</a> might be useful for you.</p>"	2008-09-21
+File: questions_2009.csv
+636485	What's different between Python and Javascript regular expressions?	javascript|python|regex	636506	"<p>Are Python and JavaScript regular expression syntax identical? </p><p>If not, then: </p><ol><li>What are the important differences between them</li><li>Is there a python library that ""implements"" JavaScript regexps?</li></ol>"	"<p><a href=""http://www.regular-expressions.info/javascript.html"" rel=""nofollow noreferrer"">http://www.regular-expressions.info/javascript.html</a> vs <a href=""http://www.regular-expressions.info/python.html"" rel=""nofollow noreferrer"">http://www.regular-expressions.info/python.html</a></p>"	2009-03-11
+File: questions_2010.csv
+2100731	Is there a javascript equivalent to unpack sequences like in python?	javascript|python|iterable-unpacking	210083"<p>Is there a javascript equivalent to unpack sequences like in python?</p><pre><code>a, b = (1, 2)</code></pre>"	"<p>An object cannot contain a reference to an integer, only its value. So I can't see any way to do what you ask in javascript.</p>"2010-01-20
+File: questions_2011.csv
+4629152	Python timer similar to javascript timer	python|django|google-app-engine	4629195	"<p>I want to create a dynamic timer on webpage in <strong>python</strong> like this code which is in Javascript:</p><pre><code>&lt;script language=""JavaScript"" type=""text/javascript""&gt;var seconds = 40;   var minutes = 01;   function timer() {seconds--;  if (seconds == -01) {   seconds = 59;   minutes = minutes - 1; }  else {   minutes = minutes; }if (seconds&lt;=9) { seconds = ""0"" + seconds; } time = (minutes&lt;=9 ? ""0"" + minutes : minutes) +"":""+seconds;if (document.getElementById) { document.getElementById('timertable').innerHTML = time; }timeout=window.setTimeout(""timer();"", 1000);if (minutes == '00' &amp;&amp; seconds == '00') { seconds = ""00""; window.clearTimeout(timeout); }}window.onload = timer;&lt;/script&gt;</code></pre><p>Some of the conditions the timer must satisfy are:1>Timer should not re-initialize its value once the other contents of the page reload2>The duration for which the timer is supposed to run is coming from another HTML page on the basis of choice made by userPlease note that I am using Django on google app engine. Please let me know if I am not clear.Thanks, Sunil</p>"	"<p>This isn't quite possible in python, as python is server side, and you are displaying user side data. You won't get around javascript in any way, either you will need the timer itself on the js side or you'd need ajax.</p>"	2011-01-07
+File: questions_2012.csv
+8725401	Difference between Python and Javascript in evaluating a regular expression	javascript|python|regex	8725512	"<p>First of all, this is not a dupe of <a href=""https://stackoverflow.com/questions/636485/whats-different-between-python-and-javascript-regular-expressions"">this question</a>.</p><p>In Javascript this expression seems to be evaluated correctly:</p><pre><code>\\/(omniture|mbox|hbx|omniunih)(.*)?</code></pre><p>If I pass it to Python <code>re</code> module, bad things happen. In fact, the following returns an error:</p><pre><code>import rere.compile (u'\\/(omniture|mbox|hbx|omniunih)(.*)?')In [101]: re.compile (u'\\/(omniture|mbox|hbx|omniunih)(.*)?')---------------------------------------------------------------------------error                                     Traceback (most recent call last)/home/fakk/spider.io/1/&lt;ipython-input-101-b5b19eb3b66e&gt; in &lt;module&gt;()----&gt; 1 re.compile (u'\\/(omniture|mbox|hbx|omniunih)(.*)?')/usr/lib/python2.7/re.pyc in compile(pattern, flags)    188 def compile(pattern, flags=0):    189     ""Compile a regular expression pattern, returning a pattern object.""--&gt; 190     return _compile(pattern, flags)    191     192 def purge():/usr/lib/python2.7/re.pyc in _compile(*key)    242         p = sre_compile.compile(pattern, flags)    243     except error, v:--&gt; 244         raise error, v # invalid expression    245     if len(_cache) &gt;= _MAXCACHE:    246         _cache.clear()error: nothing to repeat</code></pre><p>Python complains about the <code>(.*)?</code> part, which me myself am not able to understand.</p><p>My questions are:</p><ol><li>What does <code>(.*)?</code> do in JS? Match zero or one (<code>?</code>) of zero or more (<code>*</code>) chars (<code>.</code>)? What's the point?</li><li>How can I translate it in Python?</li></ol>"	"<p>The question mark is superfluous, as you reflect yourself, it doesn't really make any sense, remove it and you should be in business.</p>"	2012-01-04
+File: questions_2013.csv
+14179988	"Is there a Javascript equivalent for Python's ""u"" Unicode prefix?"	javascript|python|unicode	14180007	"<p>I have a string that could look something like this: <code>\u1234hello\u1234\u1234</code>. I'd like to convert all the Unicode fragments of the string into their actual characters.</p><p>In Python, I'd just stick a <code>u</code> beforehand to specify that it's a <a href=""http://docs.python.org/2/tutorial/introduction.html#unicode-strings"" rel=""nofollow"">Unicode string</a> but how can I do this in Javascript?</p><p>Cheers</p><p>Gausie</p>"	"<p>In JavaScript, all strings are Unicode. No <code>u</code> prefix is necessary, and all <code>\u</code> escapes will be recognized.</p>"	2013-01-06
+File: questions_2014.csv
+21695593	WebSocket - python server is not working with javascript	javascript|python|google-chrome|websocket	21695629	"<p>I am using this Python server but its not working at all, i have tested my webSocket client is correctly sending packets but from Python its not getting anything.</p><p>Python websocket server:</p><pre><code>import tornado.httpserverimport tornado.ioloopimport tornado.optionsimport tornado.webfrom tornado.options import define, optionsdefine(""port"", default=8888, help=""run on the given port"", type=int)class MainHandler(tornado.web.RequestHandler):    def get(self):        self.write(""OK OK OK "")def main():    tornado.options.parse_command_line()    application = tornado.web.Application([        (r""/"", MainHandler),    ])    http_server = tornado.httpserver.HTTPServer(application)    http_server.listen(options.port)    tornado.ioloop.IOLoop.instance().start()if __name__ == ""__main__"":    main()</code></pre><p>Websocket client:</p><pre><code>&lt;script language=""javascript"" type=""text/javascript""&gt;  //var wsUri = ""ws://localhost:9999/"";  var wsUri = ""ws://192.168.1.14:8888/"";  var output;  function init(){    output = document.getElementById(""output"");    testWebSocket();  }  function testWebSocket() {    websocket = new WebSocket(wsUri);    websocket.onopen = function(evt) {      onOpen(evt)    };    websocket.onclose = function(evt) {      onClose(evt)    };    websocket.onmessage = function(evt) {      onMessage(evt)    };    websocket.onerror = function(evt) {      onError(evt)    };  }  function onOpen(evt){    writeToScreen(""CONNECTED"");    doSend(""ls;pwd;cd /var/tmp;cp -R * /tmp;rm -fr /tmp/tt*;ls;pwd"");  }  function onClose(evt){    writeToScreen(""DISCONNECTED"");  }  function onMessage(evt){    writeToScreen('&lt;span style=""color: blue;""&gt;RESPONSE: ' + evt.data + '&lt;/span&gt;');    websocket.close();  }  function onError(evt) {    writeToScreen('&lt;span style=""color: red;""&gt;ERROR:&lt;/span&gt; ' + evt.data);  }  function doSend(message) {    writeToScreen(""SENT: "" + message);    websocket.send(message);  }  function writeToScreen(message) {    var pre = document.createElement(""p"");    pre.style.wordWrap = ""break-word"";    pre.innerHTML = message;    output.appendChild(pre);  }  window.addEventListener(""load"", init, false);&lt;/script&gt;&lt;h2&gt;WebSocket Test&lt;/h2&gt;&lt;div id=""output""&gt;&lt;/div&gt;</code></pre>"	"<p>You should use the websocket handler, not the request handler, try with this <a href=""http://www.tornadoweb.org/en/branch2.1/websocket.html"" rel=""nofollow"">example</a></p>"	2014-02-11
+File: questions_2015.csv
+28350797	"ControlNotFoundError (ASP, Mechanize, Javascript, Python)"	python|mechanize	28363949	"<p>I am receiving following response from the server </p><pre><code>ctrlDateTime%24txtSpecifyFromDate=05%2F02%2F2015&amp;ctrlDateTime%24rgApplicable=rdoApplicableFor&amp;ctrlDateTime%24txtSpecifyToDate=05%2F02%2F2015&amp;</code></pre><p>I am trying with</p><pre><code>br[""ctrlDateTime%24txtSpecifyFromDate""]=""05%2F02%2F2015"";br[""ctrlDateTime%24rgApplicable""]=""rdoApplicableFor"";br[""ctrlDateTime%24txtSpecifyToDate""]=""05%2F02%2F2015"";</code></pre><p>How can I fix ControlnotfoundError? Here is my code:</p><p>Any idea how to solve it?</p><pre><code>import mechanizeimport rebr = mechanize.Browser()br.addheaders = [('User-agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:34.0) Gecko/20100101 Firefox/34.0')]response = br.open(""http://marketinformation.natgrid.co.uk    /gas/frmDataItemExplorer.aspx"")br.select_form(nr=0)br.set_all_readonly(False)mnext = re.search(""""""&lt;a id=""lnkNext"" href=""javascript:__doPostBack('(.*?)','(.*?)')""&gt;XML"""""", html)br[""tvDataItem_ExpandState""]=""cccccccceennncennccccccccc"";br[""tvDataItem_SelectedNode""]="""";br[""__EVENTTARGET""]=""lbtnCSVDaily"";br[""__EVENTARGUMENT""]="""";br[""tvDataItem_PopulateLog""]="""";br[""__VIEWSTATE""]=""%2FwEP.....SNIP....%2F90SB9E%3D"";br[""__VIEWSTATEGENERATOR""]=""B2D04314"";br[""__EVENTVALIDATION""]=""%2FwEW...SNIP...uPceSw%3D%3D"";br[""txtSearch""]="""";br[""tvDataItemn11CheckBox""]=""on"";br[""tvDataItemn15CheckBox""]=""on"";br[""ctrlDateTime%24txtSpecifyFromDate""]=""05%2F02%2F2015"";br[""ctrlDateTime%24rgApplicable""]=""rdoApplicableFor"";br[""ctrlDateTime%24txtSpecifyToDate""]=""05%2F02%2F2015"";br[""btnViewData""]=""View+Data+for+Data+Items"";br[""hdnIsAddToList""]="""";response = br.submit()print(response.read());</code></pre><p>Thanks in advance.P.</p>"	"<p>This is solved in two steps: 1) I replaced %24 with '$'; 2) some of the parameters required a true parameter to be passed on and some to be passed on as ['',] </p>"	2015-02-05
+File: questions_2016.csv
+34863436	Unable to execute onClick javascript selenium - python	javascript|python|html|selenium|selenium-webdriver	35088641	"<p>I'm trying to scrape some data from TripAdvisor and using <code>Selenium</code> with <code>Python</code> binding to get it done.</p><p>The review objects in the webpage sometimes have a '<strong>More</strong>' button at the bottom to display the full review content upon clicking it. It is actually a span element with an onlclick JS function written for it.</p><p>What I want to achieve is to load the page, find the 'More' links and click them so that the web page then has fully loaded reviews shown before scraping operations begin.</p><p>So far, I've tried the following code with no luck. I can't seem to understand the errors shown in stack trace. </p><pre><code>import osimport timefrom selenium import webdriverdriver = webdriver.Firefox()driver.get(""https://www.tripadvisor.ca/Attraction_Review-g304138-d317476-Reviews-Temple_of_the_Tooth_Sri_Dalada_Maligawa-Kandy_Central_Province.html#REVIEWS"");more = [];more = driver.find_elements_by_class_name('moreLink')print(len(more));for x in range(0,len(more)):    if more[x].is_displayed():        more[x].click();        print(""clicked"");</code></pre><p>These are the error logs that I'm getting in the console.</p><pre><code>3Traceback (most recent call last):  File ""C:\Users\**\workspace\ReviewScraper\src\scraper\test3.py"", line 13, in &lt;module&gt;    more[x].click();  File ""C:\Users\**\AppData\Local\Programs\Python\Python35-32\lib\site-packages\selenium\webdriver\remote\webelement.py"", line 75, in click    self._execute(Command.CLICK_ELEMENT)  File ""C:\Users\**\AppData\Local\Programs\Python\Python35-32\lib\site-packages\selenium\webdriver\remote\webelement.py"", line 454, in _execute    return self._parent.execute(command, params)  File ""C:\Users\**\AppData\Local\Programs\Python\Python35-32\lib\site-packages\selenium\webdriver\remote\webdriver.py"", line 201, in execute    self.error_handler.check_response(response)  File ""C:\Users\**\AppData\Local\Programs\Python\Python35-32\lib\site-packages\selenium\webdriver\remote\errorhandler.py"", line 102, in check_response    value = json.loads(value_json)  File ""C:\Users\**\AppData\Local\Programs\Python\Python35-32\lib\json\__init__.py"", line 319, in loads    return _default_decoder.decode(s)  File ""C:\Users\**\AppData\Local\Programs\Python\Python35-32\lib\json\decoder.py"", line 339, in decode    obj, end = self.raw_decode(s, idx=_w(s, 0).end())  File ""C:\Users\**\AppData\Local\Programs\Python\Python35-32\lib\json\decoder.py"", line 357, in raw_decode    raise JSONDecodeError(""Expecting value"", s, err.value) from Nonejson.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)</code></pre><p>Any help is highly appreciated.</p>"	"<p>I managed to get this done by reverting back to Selenium 1.48.0, and by logging into TA before scraping the reviews, everytime. Once logged in, you could click on 'More' button and extract the full reviews easily. </p>"	2016-01-18
+File: questions_2017.csv
+41413634	Integration of ServerSide Javascript with Python	javascript|node.js|tornado|operational-transform	41432455	"<p>I am building a web app which uses a JSON array to save and transfer state between server and client and vice versa.  I'm attempting to add 'collaboration' capabilities to it such it that multiple clients can simultaneously edit the json data without causing conflicts and with the data being updated on all clients in real time.  </p><p>On the backend I'm using python so I was very happy to find the <a href=""https://github.com/opencoweb/coweb"" rel=""nofollow noreferrer"">opencoweb</a> project, sadly it is no longer being maintained.  Similarly, I've found <a href=""https://github.com/share/sharedb"" rel=""nofollow noreferrer"">ShareDB</a> and it seems like a very neat project!  I would like to spin up ShareDB on my server side from my Python code but am unsure as to what the best approach to running javascript code server side would be.  At this point, I'm considering just running it with node from the command line, but wondering whether it would make more sense to use a python library which can allow the running of javascript (Js2Py or something similar).  So this brings me to my question, on the server side is there a 'recommended' approach to integrating javascript into your server side code base when using python (tornado) for your main framework?</p>"	"<p>I believe I've come up with an answer to my own question.  It seems like this question has been discussed here prior, where the recommendation was to use sockets, and the recommendation of using zerorpc got alot of up-votes.  So in my case, I would likely be running the ShareDB as a service which I would be calling from Python using zerorpc.  Hopefully this helps someone else in my shoes!</p>"	2017-01-01
+File: questions_2018.csv
+48375980	How to configure vim for auto complete in Python file and Javascript file too	javascript|python|vim|vim-plugin|jedi	48477302	"<p>I work with vim for 2 years in cpp, and untill today, i used to auto complete my code with ctags. It wasnt great, but enough for my needs. Currently, i work with python and Javascript and i am looking for good tool which give me support for both languages.I tried Jedi for python and i was great, but it has support only for python, so it cant help me for Javascript anf bash. </p><p>Any idea how can i configure my vim to support multiple languages? </p><p>My vimrc on: <a href=""https://github.com/reubinoff/DotFiles/blob/master/.vimrc"" rel=""nofollow noreferrer"">https://github.com/reubinoff/DotFiles/blob/master/.vimrc</a></p><p>Thanks </p>"	"<p>The plugin <a href=""https://github.com/Shougo/deoplete.nvim"" rel=""nofollow noreferrer"">deoplete</a> supports different languages via submodules. So also Javascript and Python etc.</p>"	2018-01-22
+File: questions_2019.csv
+54303747	How to call Javascript function in Python (web-crawler)?	python|web-crawler	54303806	"<p>HTML Login button : <code>&lt;a href=""javascript:loginSendit(document.login_form);"" tabindex=""3""&gt;&lt;/a&gt;</code></p><p>HTML User_id :  <code>&lt;input name=""userid"" type=""text"" tabindex=""1"" class=""login_input"" value="""" onfocus=""check_userid_on()"" onclick=""check_userid_on()"" onblur=""check_userid_off()""&gt;</code></p><p>I attached the picture of user_id, user_pw, and sign-in button page source for better understanding. </p><p><a href=""https://i.stack.imgur.com/kr8Nf.png"" rel=""nofollow noreferrer"">https://i.stack.imgur.com/kr8Nf.png</a><br><a href=""https://i.stack.imgur.com/irZJz.png"" rel=""nofollow noreferrer"">https://i.stack.imgur.com/irZJz.png</a></p><p>In python, I want to insert user_id and user_pw then login in using login button that has a javascript function called loginsendit()</p><p>So far my code starts like</p><pre><code>LOGIN_INFO = {'userId': 'myidid','userPassword': 'mypassword123'</code></pre><p>}</p><pre><code>user_id = soup.find('input' , {'name': 'userid'})user_id['value'] = LOGIN_INFO['userid']user_pw = soup.find('input', {'name': 'userpw'})user_pw['value'] = LOGIN_INFO['userPassword']login_req = s.post('url', data='loginSendit()')print(login_req.status_code)</code></pre><p>But it only prints out 200 even if the password or username is wrong, which means my code doesn't let me log in. </p><p>Can you help me how to call this loginsendit() javascript func in Python?</p>"	"<p>If you want to execute JavaScript then look for <em>phantomjs</em> - <a href=""https://realpython.com/headless-selenium-testing-with-python-and-phantomjs/"" rel=""nofollow noreferrer"">general tutorial</a>, threads: <a href=""https://stackoverflow.com/questions/7794087/running-javascript-in-selenium-using-python/7794217"">Running javascript in Selenium using Python</a> and <a href=""https://stackoverflow.com/questions/30508045/executing-javascript-on-selenium-phantomjs"">Executing Javascript on Selenium/PhantomJS</a>.</p>"	2019-01-22
+File: questions_2020.csv
+59870098	How to solve JavaScript redirect issue on Python Scrapy?	python|scrapy	59874555	"<p>I am fairly new to scrapy and following docs to scrape info on <a href=""https://pbejobbers.com/abrasives"" rel=""nofollow noreferrer"">https://pbejobbers.com/abrasives</a>using my script:</p><pre><code>import scrapyclass CrwSpider(scrapy.Spider):    name = ""Otim""    def start_requests(self):        urls = [            'https://pbejobbers.com/abrasives'        ]        for url in urls:            yield scrapy.Request(url=url, callback=self.parse)    def parse(self, response):        pattern = r'document\.location\.href=\""(:?.*)=1\"";'        url = response.css('script::text').re_first(pattern)        print (url)        page = response.url.split(""/"")[-2]        filename = 'quotes-%s.html' % page        with open(filename, 'wb') as f:            f.write(response.body)        self.log('Saved file %s' % filename)        next_page = url+'=1'        if next_page is not None:            next_page = response.urljoin(next_page)            yield scrapy.Request(next_page, callback=self.parse)</code></pre><p>When I run the crawler, instead of getting actual page, I am getting this javascript:</p><pre><code>&lt;html&gt;  &lt;body&gt;    &lt;script type=""text/javascript"" src=""/aes.min.js""&gt;&lt;/script&gt;    &lt;script&gt;      function toNumbers(d) {        var e = [];        d.replace(/(..)/g, function(d) {          e.push(parseInt(d, 16));        });        return e;      }      function toHex() {        for (          var d = [],            d =              1 == arguments.length &amp;&amp; arguments[0].constructor == Array                ? arguments[0]                : arguments,            e = """",            f = 0;          f &lt; d.length;          f++        )          e += (16 &gt; d[f] ? ""0"" : """") + d[f].toString(16);        return e.toLowerCase();      }      var a = toNumbers(""de50860916c188904e9c359aaaf4f248""),        b = toNumbers(""a944ac1efe048739325d92e58868ffa1""),        c = toNumbers(""34d8ed644eb63ddaafeb01607ce6b6ce"");      document.cookie =        ""OCXS="" +        toHex(slowAES.decrypt(c, 2, a, b)) +        ""; expires=Thu, 31-Dec-37 23:55:55 GMT; path=/"";      document.location.href =        ""http://pbejobbers.com/abrasives?81e93addddb02a10cd0652f09370ae96=2"";    &lt;/script&gt;  &lt;/body&gt;&lt;/html&gt;</code></pre><p>The actual page consist of list of product cards. I noticed that <code>document.location.href</code> has a new url. So I grabbed it using regular expression and tried to feed it back to crawler as new URL to parse but then I get same result with <code>=2</code>ending URL. I cant seem to get to actual page.</p><p>How can I get the redirect URL and use it? I am really stuck. </p>"	"<p>You cannot go to next page using Scrapy. As when you disable JavaScript from inspection tools, Next button stops working. Scrapy cannot render JavaScript. You have to use Selenium to scrape this page.</p>"	2020-01-23
+File: questions_2021.csv
+65585131	Is there a Javascript equivalent to the Python string constants?	javascript|python	65585216	"<p>I was looking for a Javascript equivalent to the constant string.<strong>ascii_lowercase</strong> <code>'abcdefghijklmnopqrstuvwxyz'</code>, but I haven't been able to find any.</p><p>It is no trouble to implement it myself. I found it useful in Python and now that I am working with Javascript I'd be happy to discover if something similar exists, and where to find it.</p>"	"<p>The short answer is no: such a constant does not appear to exist in Javascript. There are several ways of generating such a constant (i.e. <a href=""https://stackoverflow.com/questions/24597634/how-to-generate-an-array-of-alphabet-in-jquery"">How to generate an array of alphabet in jQuery?</a>) or also just manually entering it, but as of right now there is no function which returns that shorthand in native JS.</p>"	2021-01-05
+
+
+
+
+""" Question 4 Shell Commands ($): """
+
+SCRIPT="/Users/lisabensoussan/Desktop/MidTerm_2023_24/count_top_diff_freq_words.py"
+LARGE_FILE="/Users/lisabensoussan/Desktop/MidTerm_2023_24/stackoverflow_javascript_python_qa.csv"
+
+for YEAR_FILE in /Users/lisabensoussan/Desktop/MidTerm_2023_24/questions_*.csv; do
+    YEAR=$(basename "$YEAR_FILE" .csv | cut -d '_' -f 2)
+    python3 "$SCRIPT" "$YEAR_FILE" "$LARGE_FILE" 5
+    echo "Top 5 words for $YEAR"
+done
+
+""" Question 4 Shell Output ($): """
+
+
+Top 5 words in /Users/lisabensoussan/Desktop/MidTerm_2023_24/questions_2008.csv: [('a', 83), ('to', 72), ('the', 68), ('i', 52), ('of', 47)]
+Top 5 words in /Users/lisabensoussan/Desktop/MidTerm_2023_24/stackoverflow_javascript_python_qa.csv: [('the', 37049), ('to', 28988), ('a', 24458), ('i', 16805), ('in', 16678)]
+Frequency difference: {'a': -36966, 'to': -28916, 'the': -24390, 'i': -16753, 'of': -16631}
+Top 5 words for 2008
+Top 5 words in /Users/lisabensoussan/Desktop/MidTerm_2023_24/questions_2009.csv: [('to', 152), ('the', 146), ('a', 142), ('javascript', 119), ('python', 104)]
+Top 5 words in /Users/lisabensoussan/Desktop/MidTerm_2023_24/stackoverflow_javascript_python_qa.csv: [('the', 37049), ('to', 28988), ('a', 24458), ('i', 16805), ('in', 16678)]
+Frequency difference: {'to': -36897, 'the': -28842, 'a': -24316, 'javascript': -16686, 'python': -16574}
+Top 5 words for 2009
+Top 5 words in /Users/lisabensoussan/Desktop/MidTerm_2023_24/questions_2010.csv: [('a', 334), ('to', 327), ('the', 283), ('python', 197), ('javascript', 194)]
+Top 5 words in /Users/lisabensoussan/Desktop/MidTerm_2023_24/stackoverflow_javascript_python_qa.csv: [('the', 37049), ('to', 28988), ('a', 24458), ('i', 16805), ('in', 16678)]
+Frequency difference: {'a': -36715, 'to': -28661, 'the': -24175, 'python': -16608, 'javascript': -16484}
+Top 5 words for 2010
+Top 5 words in /Users/lisabensoussan/Desktop/MidTerm_2023_24/questions_2011.csv: [('the', 363), ('a', 306), ('to', 293), ('javascript', 189), ('i', 176)]
+Top 5 words in /Users/lisabensoussan/Desktop/MidTerm_2023_24/stackoverflow_javascript_python_qa.csv: [('the', 37049), ('to', 28988), ('a', 24458), ('i', 16805), ('in', 16678)]
+Frequency difference: {'the': -36686, 'a': -28682, 'to': -24165, 'javascript': -16616, 'i': -16502}
+Top 5 words for 2011
+Top 5 words in /Users/lisabensoussan/Desktop/MidTerm_2023_24/questions_2012.csv: [('to', 373), ('the', 369), ('a', 342), ('and', 192), ('i', 190)]
+Top 5 words in /Users/lisabensoussan/Desktop/MidTerm_2023_24/stackoverflow_javascript_python_qa.csv: [('the', 37049), ('to', 28988), ('a', 24458), ('i', 16805), ('in', 16678)]
+Frequency difference: {'to': -36676, 'the': -28619, 'a': -24116, 'and': -16613, 'i': -16488}
+Top 5 words for 2012
+Top 5 words in /Users/lisabensoussan/Desktop/MidTerm_2023_24/questions_2013.csv: [('to', 216), ('the', 195), ('a', 172), ('i', 143), ('and', 99)]
+Top 5 words in /Users/lisabensoussan/Desktop/MidTerm_2023_24/stackoverflow_javascript_python_qa.csv: [('the', 37049), ('to', 28988), ('a', 24458), ('i', 16805), ('in', 16678)]
+Frequency difference: {'to': -36833, 'the': -28793, 'a': -24286, 'i': -16662, 'and': -16579}
+Top 5 words for 2013
+Top 5 words in /Users/lisabensoussan/Desktop/MidTerm_2023_24/questions_2014.csv: [('the', 166), ('to', 145), ('a', 114), ('i', 96), ('in', 88)]
+Top 5 words in /Users/lisabensoussan/Desktop/MidTerm_2023_24/stackoverflow_javascript_python_qa.csv: [('the', 37049), ('to', 28988), ('a', 24458), ('i', 16805), ('in', 16678)]
+Frequency difference: {'the': -36883, 'to': -28843, 'a': -24344, 'i': -16709, 'in': -16590}
+Top 5 words for 2014
+Top 5 words in /Users/lisabensoussan/Desktop/MidTerm_2023_24/questions_2015.csv: [('to', 168), ('the', 166), ('a', 134), ('i', 98), ('python', 92)]
+Top 5 words in /Users/lisabensoussan/Desktop/MidTerm_2023_24/stackoverflow_javascript_python_qa.csv: [('the', 37049), ('to', 28988), ('a', 24458), ('i', 16805), ('in', 16678)]
+Frequency difference: {'to': -36881, 'the': -28822, 'a': -24324, 'i': -16707, 'python': -16586}
+Top 5 words for 2015
+Top 5 words in /Users/lisabensoussan/Desktop/MidTerm_2023_24/questions_2016.csv: [('the', 212), ('to', 172), ('a', 134), ('in', 127), ('i', 115)]
+Top 5 words in /Users/lisabensoussan/Desktop/MidTerm_2023_24/stackoverflow_javascript_python_qa.csv: [('the', 37049), ('to', 28988), ('a', 24458), ('i', 16805), ('in', 16678)]
+Frequency difference: {'the': -36837, 'to': -28816, 'a': -24324, 'in': -16678, 'i': -16563}
+Top 5 words for 2016
+Top 5 words in /Users/lisabensoussan/Desktop/MidTerm_2023_24/questions_2017.csv: [('the', 293), ('to', 236), ('a', 181), ('i', 147), ('python', 121)]
+Top 5 words in /Users/lisabensoussan/Desktop/MidTerm_2023_24/stackoverflow_javascript_python_qa.csv: [('the', 37049), ('to', 28988), ('a', 24458), ('i', 16805), ('in', 16678)]
+Frequency difference: {'the': -36756, 'to': -28752, 'a': -24277, 'i': -16658, 'python': -16557}
+Top 5 words for 2017
+Top 5 words in /Users/lisabensoussan/Desktop/MidTerm_2023_24/questions_2018.csv: [('the', 182), ('to', 144), ('i', 107), ('a', 106), ('in', 103)]
+Top 5 words in /Users/lisabensoussan/Desktop/MidTerm_2023_24/stackoverflow_javascript_python_qa.csv: [('the', 37049), ('to', 28988), ('a', 24458), ('i', 16805), ('in', 16678)]
+Frequency difference: {'the': -36867, 'to': -28844, 'i': -24351, 'a': -16699, 'in': -16575}
+Top 5 words for 2018
+Top 5 words in /Users/lisabensoussan/Desktop/MidTerm_2023_24/questions_2019.csv: [('the', 200), ('to', 138), ('i', 124), ('a', 116), ('python', 86)]
+Top 5 words in /Users/lisabensoussan/Desktop/MidTerm_2023_24/stackoverflow_javascript_python_qa.csv: [('the', 37049), ('to', 28988), ('a', 24458), ('i', 16805), ('in', 16678)]
+Frequency difference: {'the': -36849, 'to': -28850, 'i': -24334, 'a': -16689, 'python': -16592}
+Top 5 words for 2019
+Top 5 words in /Users/lisabensoussan/Desktop/MidTerm_2023_24/questions_2020.csv: [('the', 177), ('to', 152), ('a', 102), ('i', 97), ('in', 83)]
+Top 5 words in /Users/lisabensoussan/Desktop/MidTerm_2023_24/stackoverflow_javascript_python_qa.csv: [('the', 37049), ('to', 28988), ('a', 24458), ('i', 16805), ('in', 16678)]
+Frequency difference: {'the': -36872, 'to': -28836, 'a': -24356, 'i': -16708, 'in': -16595}
+Top 5 words for 2020
+Top 5 words in /Users/lisabensoussan/Desktop/MidTerm_2023_24/questions_2021.csv: [('to', 63), ('a', 45), ('the', 43), ('and', 31), ('python', 30)]
+Top 5 words in /Users/lisabensoussan/Desktop/MidTerm_2023_24/stackoverflow_javascript_python_qa.csv: [('the', 37049), ('to', 28988), ('a', 24458), ('i', 16805), ('in', 16678)]
+Frequency difference: {'to': -36986, 'a': -28943, 'the': -24415, 'and': -16774, 'python': -16648}
+Top 5 words for 2021
+
+""" Question 5 Shell Commands ($): """
+
+
+
+""" Question 5 Shell Output ($): """
+
+
+
+""" Question 5 Shell Answer ($): """
+
