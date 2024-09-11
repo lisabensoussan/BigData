@@ -1,9 +1,5 @@
 ## MidTerm 52019/52002 2023-24
 
-# Student IDs: 
-ID1: 346453202
-ID2: 346462534
-
 
 ## You must show a "Proof of Work" for each question, even if there is no explicit output. 
 ## For example, a proof of work can be a printout/output that demonstrates that your command achieved the requirements. 
@@ -196,14 +192,3 @@ Top 5 words in /Users/lisabensoussan/Desktop/MidTerm_2023_24/questions_2021.csv:
 Top 5 words in /Users/lisabensoussan/Desktop/MidTerm_2023_24/stackoverflow_javascript_python_qa.csv: [('the', 37049), ('to', 28988), ('a', 24458), ('i', 16805), ('in', 16678)]
 Frequency difference: {'to': -36986, 'a': -28943, 'the': -24415, 'and': -16774, 'python': -16648}
 Top 5 words for 2021
-
-""" Question 5 Shell Commands ($): """
-
-
-
-""" Question 5 Shell Output ($): """
-
-
-
-""" Question 5 Shell Answer ($): """
-
