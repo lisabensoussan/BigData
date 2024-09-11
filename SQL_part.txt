@@ -1,10 +1,5 @@
 ## MidTerm 52019/52002 2023-24
 
-# Student IDs: 
-ID1: 346453202
-ID2: 346462534
-
-
 """ Query 1: """
 
 SELECT id, title, tags, answer_count,score
