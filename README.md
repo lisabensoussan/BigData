@@ -2,8 +2,8 @@
 
 ## MidTerm 52019/52002 2023-24
 
-### Student :
-- Lisa Mechaly
+### Students :
+- Lisa Mechaly Bensoussan
 - Jeremy Hakoune
 
 ### Project Overview:
